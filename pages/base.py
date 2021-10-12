@@ -13,7 +13,6 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
-from utilites.decorators import add_logger
 
 
 ''' 
