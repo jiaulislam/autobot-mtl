@@ -124,10 +124,10 @@ class Create(BasePage):
                         query_formula = make_data.make_query_string(impact_sites)
                         self.createChangeRequest.add_relationship_to_change(query_formula)
 
-                    while True:
-                       val = input("Press q after finished")
-                       if val == 'q':
-                           break
+                    # while True:
+                    #    val = input("Press q after finished")
+                    #    if val == 'q':
+                    #        break
                     # self.createChangeRequest.save_change()
                     
                     self.createChangeRequest.goto_next_stage()
