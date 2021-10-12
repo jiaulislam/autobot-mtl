@@ -57,7 +57,7 @@ def get_change_close_start_time(m_date: str) -> str:
 
     if date_valid(make_date_time):
         make_date_time += timedelta(days=1)
-
+                                                    #20, 17
     close_start_time = make_date_time.replace(hour=17, minute=0, second=0)
     return close_start_time.strftime('%m/%d/%Y %I:%M:%S %p')
 
@@ -68,7 +68,7 @@ def get_change_close_end_time(m_date: str) -> str:
 
     if date_valid(make_date_time):
         make_date_time += timedelta(days=1)
-
+                                                    #21, 18
     close_start_time = make_date_time.replace(hour=18, minute=0, second=0)
     return close_start_time.strftime('%m/%d/%Y %I:%M:%S %p')
 
