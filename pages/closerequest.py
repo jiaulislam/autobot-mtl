@@ -1,3 +1,4 @@
+from datetime import datetime as DateTime, timedelta
 import time
 from typing import Union
 
@@ -136,14 +137,17 @@ class CloseRequests(BasePage):
 
     def __common_closing_activity(self, start_time: str) -> None:
         """ Perform the common closing activity in the 3 task """
-        self.write(Close_Locators.TASK_ACTUAL_START_DATE, start_time)
+        _open_time = DateTime.strptime(str(start_time), '%m/%d/%Y %I:%M:%S %p')
+        _open_time += timedelta(minute=30)
+        
+        self.write(Close_Locators.TASK_ACTUAL_START_DATE, _open_time.strftime('%m/%d/%Y %I:%M:%S %p'))
         if self.get_change_type():
             _start_date: str = self.get_text(Close_Locators.TASK_PLAN_START_DATE)
             _end_date: str = self.get_text(Close_Locators.TASK_PLAN_END_DATE)
-            _actual_end_date: str = make_downtime_from_open_time_2(start_time, _start_date, _end_date)
+            _actual_end_date: str = make_downtime_from_open_time_2(_open_time.strftime('%m/%d/%Y %I:%M:%S %p'), _start_date, _end_date)
             self.write(Close_Locators.TASK_ACTUAL_END_DATE, _actual_end_date)
         else:
-            self.write(Close_Locators.TASK_ACTUAL_END_DATE, start_time)
+            self.write(Close_Locators.TASK_ACTUAL_END_DATE, _open_time.strftime('%m/%d/%Y %I:%M:%S %p'))
         self.click(Close_Locators.CLOSE_MENU_SELECT)
         self.hover_over(Close_Locators.SELECT_CLOSE)
         self.click(Close_Locators.SELECT_CLOSE)
