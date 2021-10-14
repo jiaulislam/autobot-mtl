@@ -138,7 +138,7 @@ class CloseRequests(BasePage):
     def __common_closing_activity(self, start_time: str) -> None:
         """ Perform the common closing activity in the 3 task """
         _open_time = DateTime.strptime(str(start_time), '%m/%d/%Y %I:%M:%S %p')
-        _open_time += timedelta(minute=30)
+        _open_time += timedelta(minutes=30)
         
         self.write(Close_Locators.TASK_ACTUAL_START_DATE, _open_time.strftime('%m/%d/%Y %I:%M:%S %p'))
         if self.get_change_type():
