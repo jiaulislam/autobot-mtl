@@ -4,6 +4,7 @@ from typing import Union
 
 from selenium.common.exceptions import (
     NoSuchElementException,
+    NoSuchFrameException,
     StaleElementReferenceException,
     ElementClickInterceptedException,
     TimeoutException
@@ -159,6 +160,8 @@ class CloseRequests(BasePage):
         except ElementClickInterceptedException:
             self.handle_frame_alert(Frame_Locators.FRAME_OF_CONFIRMATION, Frame_Locators.FRAME_OK_BUTTON)
             self.__back_to_change_task_page()
+        except NoSuchFrameException:
+            pass
 
     def close_service_downtime_duration_task(self, actual_start_time: str) -> None:
         """
