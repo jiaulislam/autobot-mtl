@@ -9,7 +9,7 @@ from rich.table import Table
 from rich.text import Text
 
 from prettify.prettify_ldma import Header
-from utilites.sysinfo import get_memory_info, get_platform, get_python_version
+# from utilites.sysinfo import get_memory_info, get_platform, get_python_version
 
 
 class ClosePrettify:
@@ -18,42 +18,42 @@ class ClosePrettify:
 
     @staticmethod
     def get_top_layout() -> Panel:
-        _memory: Tuple[str] = get_memory_info()
-        _platform: str = get_platform()
-        _pyversion: str = get_python_version()
+        # _memory: Tuple[str] = get_memory_info()
+        # _platform: str = get_platform()
+        # _pyversion: str = get_python_version()
 
-        _total_memory: str = _memory[0]
-        _available_memory: str = _memory[1]
-        _used_percentage: str = _memory[2]
-        _used_memory: str = _memory[3]
-        _free_memory: str = _memory[4]
+        # _total_memory: str = _memory[0]
+        # _available_memory: str = _memory[1]
+        # _used_percentage: str = _memory[2]
+        # _used_memory: str = _memory[3]
+        # _free_memory: str = _memory[4]
 
         table = Table.grid(expand=True)
 
         table.add_row(
-            "Total Memory: ", Text(_total_memory, style="yellow", justify="right")
+            "Total Memory: ", Text("DELETE", style="yellow", justify="right")
         )
         table.add_row(
             "Available Memory: ", Text(
-                _available_memory, style="green", justify="right")
+                "DELETE", style="green", justify="right")
         )
         table.add_row(
-            "Used Memory: ", Text(_used_memory, style="red", justify="right")
+            "Used Memory: ", Text("DELETE", style="red", justify="right")
         )
         table.add_row(
-            "Free Memory: ", Text(_free_memory, style="green", justify="right")
+            "Free Memory: ", Text("DELETE", style="green", justify="right")
         )
         table.add_row(
             "Used Percentage: ", Text(
-                _used_percentage, style="magenta", justify="right")
+                "DELETE", style="magenta", justify="right")
         )
         table.add_row(
             "OS: ", Text(
-                _platform, style="blue", justify="right")
+                "DELETE", style="blue", justify="right")
         )
         table.add_row(
             "Python Version: ", Text(
-                _pyversion, style="blue", justify="right")
+                "DELETE", style="blue", justify="right")
         )
         return Panel(
             Align.center(table, vertical="middle", pad=False),

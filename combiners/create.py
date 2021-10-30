@@ -122,7 +122,13 @@ class Create(BasePage):
                     # Save and go back to home page, need to tag site if service effective cr
                     if service_type == 'Service Effective':
                         query_formula = make_data.make_query_string(impact_sites)
-                        self.createChangeRequest.add_relationship_to_change(query_formula)
+                        try:
+                            self.createChangeRequest.add_relationship_to_change(query_formula)
+                        except Exception:
+                            while True:
+                                if input() != "x":
+                                    time.sleep(1)
+                                break
 
                     # while True:
                     #    val = input("Press q after finished")

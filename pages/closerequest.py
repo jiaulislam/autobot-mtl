@@ -154,6 +154,7 @@ class CloseRequests(BasePage):
         self.click(Close_Locators.SELECT_CLOSE)
         time.sleep(1)
         self.click(Common_Locators.SAVE_TASK_BTN)
+        self.wait_for_loading_icon_disappear()
         try:
             self.__back_to_change_task_page()
             time.sleep(2)
@@ -207,6 +208,7 @@ class CloseRequests(BasePage):
             self.click(Close_Locators.SELECT_CLOSE)
             time.sleep(1)
             self.click(Common_Locators.SAVE_TASK_BTN)
+            self.wait_for_loading_icon_disappear()
             self.__back_to_change_task_page()
         else:
             self.__back_to_change_task_page()

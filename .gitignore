@@ -17,3 +17,4 @@ assets/
 report.html
 .venv/
 data_driver/
+.vs/

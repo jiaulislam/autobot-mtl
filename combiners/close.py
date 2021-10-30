@@ -62,7 +62,14 @@ class Close(BasePage):
                                         self.close_requests.close_service_downtime_window_task(actual_open_time,
                                                                                                current_sys_time)
                                         # Close the 4th task
-                                        self.close_requests.close_system_downtime_duration_task(actual_open_time)
+                                        try:
+                                            self.close_requests.close_system_downtime_duration_task(actual_open_time)
+                                        except Exception:
+                                            while True:
+                                                if input() != "x":
+                                                    print("Plz solve the issue")
+                                                break
+
                                         self.create_requests.go_back_to_homepage()
                                         ClosePrettify.add_row_table(str(_index + 1),
                                                                     self.close_requests.get_change_number(),
