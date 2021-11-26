@@ -1,6 +1,8 @@
+import time
 from typing import NoReturn
 
 from selenium.common.exceptions import (
+    ElementClickInterceptedException,
     TimeoutException,
     NoSuchElementException
 )
@@ -41,6 +43,16 @@ class CancelRequests(BasePage):
                     return True
         except TimeoutException as error:
             print(error)
+        except ElementClickInterceptedException:
+            time.sleep(2)
+            self.click(DateSectionSelector.DATE_PAGE)
+            status = self.is_visible(DateSectionSelector.START_DATE_INPUT)
+            if status:
+                value = self.find_element(*CloseChangeLocators.ACTUAL_OPEN_DATE).get_attribute("value")
+                if value == "":
+                    return False
+                else:
+                    return True
 
     def is_cancelled(self) -> bool:
         """ Checks if the Cancellation is successful or not """
