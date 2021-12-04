@@ -14,9 +14,7 @@ READER_FILENAME = 'Request_CR.xlsx'
 WRITER_FILENAME = 'Output_CR.xlsx'
 CANCEL_CHANGE_FILENAME = "cancel.txt"
 CLOSE_CHANGE_FILENAME = "close.txt"
-USERNAME = 'admin'
-PASSWORD = 'admin123'
-DSN = 'localhost:1521/cidb'
+
 
 
 class StaticData:

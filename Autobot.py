@@ -1,9 +1,13 @@
 from rich import print
+import datetime
 
 from actions.action import CreateNewChangeRequest, CloseChangeRequest, CancelChangeRequests, ParserLDMA
 from prettify import prettify_ldma
 from prettify.driver_prettify import MenuLayout, get_menu_choice
 from sys import exit
+from utilites.db import export_data
+
+from xlsx_writer.writer import Writer
 
 """
 Module Name: Autobot.py
@@ -14,6 +18,9 @@ from here. User's will choose the actions to do on BMC Remedy.
 
 written by: jiaul_islam
 """
+
+def get_advance_date() -> str:
+    return (datetime.datetime.today() + datetime.timedelta(days=1)).strftime("%d-%b-%Y")
 
 
 def main():
@@ -59,6 +66,16 @@ def main():
                         parse.tearDownDriver()
                     elif choice == 0:
                         break
+            elif choice == 5:
+                _date = get_advance_date()
+                db_data: list = export_data(_date)
+                try:
+                    with Writer(f'{_date}_GENARATED_CR.xlsx') as writer:
+                        writer.write_to_excel(db_data)
+                        print(f"\nExported data to {writer.file_name}")
+                except Exception as e:
+                    raise e
+                break
             elif choice == 0:
                 break
     except KeyboardInterrupt:

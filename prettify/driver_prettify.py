@@ -35,6 +35,7 @@ class MenuLayout:
         self._table.add_row("3", "CANCEL NCR  🧨")
         self._table.add_row("4", "LDMA PARSER  📆")
         self._table.add_row("0", "EXIT AUTOBOT  ⚔")
+        self._table.add_row("5", "EXPORT TO EXCEL ⚡")
 
         self._layout["head"].update(Header("WELCOME TO AUTOBOT"))
         self._layout["mid_section"].update(make_sponsor_message())
@@ -43,5 +44,5 @@ class MenuLayout:
 
 
 def get_menu_choice() -> int:
-    choice = Prompt.ask("Enter choice", choices=["1", "2", "3", "4", "0"])
+    choice = Prompt.ask("Enter choice", choices=["1", "2", "3", "4", "0", "5"])
     return int(choice)

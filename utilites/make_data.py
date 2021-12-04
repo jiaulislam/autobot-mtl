@@ -58,7 +58,7 @@ def get_change_close_start_time(m_date: str) -> str:
     if date_valid(make_date_time):
         make_date_time += timedelta(days=1)
                                                     #20, 17
-    close_start_time = make_date_time.replace(hour=20, minute=0, second=0)
+    close_start_time = make_date_time.replace(hour=17, minute=0, second=0)
     return close_start_time.strftime('%m/%d/%Y %I:%M:%S %p')
 
 # CR WINDOW END 2/TIME
@@ -69,7 +69,7 @@ def get_change_close_end_time(m_date: str) -> str:
     if date_valid(make_date_time):
         make_date_time += timedelta(days=1)
                                                     #21, 18
-    close_start_time = make_date_time.replace(hour=21, minute=0, second=0)
+    close_start_time = make_date_time.replace(hour=18, minute=0, second=0)
     return close_start_time.strftime('%m/%d/%Y %I:%M:%S %p')
 
 
@@ -88,9 +88,9 @@ def split_string(AnyStr: str) -> List[str]:
 def make_impact_list(site_list: str) -> str:
     """ Export a file with site list & return the string of site list with formatted impact list """
     _list_of_sites: List[str] = split_string(site_list)
-    _IMPACT_LIST = "\n\nImpact List:"
+    # _IMPACT_LIST = "\n\nImpact List:"
 
-    return f"{_IMPACT_LIST} {','.join(_list_of_sites)}"
+    return ','.join(_list_of_sites)
 
 
 def list_of_change(file_name: str) -> List[str]:

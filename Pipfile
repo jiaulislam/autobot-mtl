@@ -28,9 +28,11 @@ urllib3 = "==1.26.7"
 webdriver-manager = "==3.5.0"
 Pygments = "==2.10.0"
 cx-oracle = "*"
+xlsxwriter = "*"
 
 [dev-packages]
 ipython = "*"
+autopep8 = "*"
 
 [requires]
 python_version = "3.10"

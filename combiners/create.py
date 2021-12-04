@@ -5,6 +5,7 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 from selenium.webdriver.chrome.webdriver import WebDriver
+import datetime
 
 from pages.base import BasePage
 from pages.createrequest import CreateRequests
@@ -13,6 +14,7 @@ from pages.login import LoginPage
 from prettify.create_prettifier import get_layout, get_table, add_row_table
 from utilites import make_data
 from utilites.data_export import Data_Export
+from utilites.db import insert_data
 from utilites.read_excel_data import Read_Data
 from utilites.static_data import StaticData
 
@@ -64,7 +66,7 @@ class Create(BasePage):
 
                     summary = project_name + " // " + service_type + "\n\n"
                     notes = summary + change_activity + "\n\n"
-                    impact_list = make_data.make_impact_list(impact_sites)
+                    impact_list = "\n\nImpact List:" + make_data.make_impact_list(impact_sites)
                     details = summary + change_activity + impact_list
 
                     # ---------------make_data: Task Time Calculation ---------------- #
@@ -101,6 +103,23 @@ class Create(BasePage):
                     self.createChangeRequest.fill_review_closure_task(
                         activity_hour, cr_end_time)
                     # ---------------------------------- END -------------------------------------------- #
+
+                    # =================================== ORACLE DB SECTION ==============================#
+                    db_data = {
+                        'REQUEST_DATE' : datetime.datetime.strptime(str(date), '%Y-%m-%d %H:%M:%S').strftime('%d-%b-%y'),
+                        'PROJECT_CO_ORDINATOR': coordinator,
+                        'PROJECT_NAME' : project_name,
+                        'ACTIVITY_DETAILS' : change_activity,
+                        'IMPACT_SITE_LIST' : make_data.make_impact_list(impact_sites),
+                        'SERVICE_TYPE' : service_type,
+                        'DOWN_TIME' : duration,
+                        'COMMERCIAL_ZONE' : commercial_zone,
+                        'NCR_NUMBER' : change_number,
+                        'CHANGE_MANAGER' : change_manager,
+                        'STATUS' : 'REQUEST FOR AUTHORIZATION'
+                    }
+
+                    insert_data(db_data)
 
                     # ---------------------------Data_Export: Export all the data ------------------ #
                     self.export_data.insert_date(_excel_index, date)
