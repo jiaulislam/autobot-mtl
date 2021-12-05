@@ -13,27 +13,26 @@ written by: jiaul_islam
 
 
 def get_change_start_time(m_date: str) -> str:
-    """ Get the Change Start Time """
+    """Get the Change Start Time"""
     make_date_time = parse_datetime(m_date)
     if date_valid(make_date_time):
         make_date_time += timedelta(days=1)
     start_time = make_date_time.replace(hour=9, minute=0, second=0)
-    return start_time.strftime('%m/%d/%Y %I:%M:%S %p')
+    return start_time.strftime("%m/%d/%Y %I:%M:%S %p")
 
 
 def get_service_start_downtime(m_date: str) -> str:
-    """ Get the Change Start downtime """
+    """Get the Change Start downtime"""
     make_date_time = parse_datetime(m_date)
     if date_valid(make_date_time):
         make_date_time += timedelta(days=1)
     start_downtime = make_date_time.replace(hour=11, minute=0, second=0)
-    return start_downtime.strftime('%m/%d/%Y %I:%M:%S %p')
+    return start_downtime.strftime("%m/%d/%Y %I:%M:%S %p")
 
 
 def get_service_end_downtime(start_downtime: str, duration: str) -> str:
-    """ Get the Change End Time """
-    make_date_time = DateTime.strptime(
-        str(start_downtime), '%m/%d/%Y %I:%M:%S %p')
+    """Get the Change End Time"""
+    make_date_time = DateTime.strptime(str(start_downtime), "%m/%d/%Y %I:%M:%S %p")
 
     if date_valid(make_date_time):
         make_date_time += timedelta(days=1)
@@ -48,53 +47,55 @@ def get_service_end_downtime(start_downtime: str, duration: str) -> str:
         make_date_time += timedelta(minutes=45)
     else:
         make_date_time += timedelta(hours=hour)
-    return make_date_time.strftime('%m/%d/%Y %I:%M:%S %p')
+    return make_date_time.strftime("%m/%d/%Y %I:%M:%S %p")
+
 
 # CR WINDOW END 1/TIME
 def get_change_close_start_time(m_date: str) -> str:
-    """ Get the Change Close Start Time """
+    """Get the Change Close Start Time"""
     make_date_time = parse_datetime(m_date)
 
     if date_valid(make_date_time):
         make_date_time += timedelta(days=1)
-                                                    #20, 17
+        # 20, 17
     close_start_time = make_date_time.replace(hour=17, minute=0, second=0)
-    return close_start_time.strftime('%m/%d/%Y %I:%M:%S %p')
+    return close_start_time.strftime("%m/%d/%Y %I:%M:%S %p")
+
 
 # CR WINDOW END 2/TIME
 def get_change_close_end_time(m_date: str) -> str:
-    """ Get the Change Close End Time """
+    """Get the Change Close End Time"""
     make_date_time = parse_datetime(m_date)
 
     if date_valid(make_date_time):
         make_date_time += timedelta(days=1)
-                                                    #21, 18
+        # 21, 18
     close_start_time = make_date_time.replace(hour=18, minute=0, second=0)
-    return close_start_time.strftime('%m/%d/%Y %I:%M:%S %p')
+    return close_start_time.strftime("%m/%d/%Y %I:%M:%S %p")
 
 
 def parse_datetime(m_date: str) -> DateTime:
-    """ Get the as a formatted as required """
-    return DateTime.strptime(str(m_date), '%Y-%m-%d %H:%M:%S')
+    """Get the as a formatted as required"""
+    return DateTime.strptime(str(m_date), "%Y-%m-%d %H:%M:%S")
 
 
 def split_string(AnyStr: str) -> List[str]:
-    """ Split the Given site codes with comma(,) semi-colon(;) backslash(/) forwardslash(\\) hipen(-) string """
-    _PATTERN = r'([A-Z]{5}(?:(?:[A-Z0-9][0-9])|(?:[0-9][A-Z0-9])))'
+    """Split the Given site codes with comma(,) semi-colon(;) backslash(/) forwardslash(\\) hipen(-) string"""
+    _PATTERN = r"([A-Z]{5}(?:(?:[A-Z0-9][0-9])|(?:[0-9][A-Z0-9])))"
     _list_of_sites: List[str] = re.findall(_PATTERN, AnyStr)
     return _list_of_sites
 
 
 def make_impact_list(site_list: str) -> str:
-    """ Export a file with site list & return the string of site list with formatted impact list """
+    """Export a file with site list & return the string of site list with formatted impact list"""
     _list_of_sites: List[str] = split_string(site_list)
     # _IMPACT_LIST = "\n\nImpact List:"
 
-    return ','.join(_list_of_sites)
+    return ",".join(_list_of_sites)
 
 
 def list_of_change(file_name: str) -> List[str]:
-    """ return the list of Change Numbers from the text file """
+    """return the list of Change Numbers from the text file"""
     change_list = []
     try:
         with open(file_name, "r") as file:
@@ -109,37 +110,34 @@ def list_of_change(file_name: str) -> List[str]:
 
 
 def get_current_system_time() -> str:
-    """ parse the current system time with formatted string """
+    """parse the current system time with formatted string"""
     _time = DateTime.now() - timedelta(minutes=5)
     return _time.strftime("%m/%d/%Y %I:%M %p")
 
 
 def make_downtime_from_open_time(open_time: str) -> str:
-    """ make and return e downtime duration with the help of open time """
-    original_date = DateTime.strptime(
-        open_time, "%m/%d/%Y %I:%M:%S %p")
+    """make and return e downtime duration with the help of open time"""
+    original_date = DateTime.strptime(open_time, "%m/%d/%Y %I:%M:%S %p")
     # add extra 30 minute with the parsed time to close for service effective NCR
     original_date += timedelta(minutes=30)
 
     return str(original_date.strftime("%m/%d/%Y %I:%M:%S %p"))
 
-def make_downtime_from_open_time_2(open_time: str, schedule_start_time: str, schedule_end_time: str):
-    _original_date = DateTime.strptime(
-        open_time, "%m/%d/%Y %I:%M:%S %p")
-    _start_date = DateTime.strptime(
-        schedule_start_time, "%m/%d/%Y %I:%M:%S %p"
-    )
-    _end_date = DateTime.strptime(
-        schedule_end_time, "%m/%d/%Y %I:%M:%S %p"
-    )
-    _time_diff = int(divmod((_end_date - _start_date).total_seconds(),60)[0])
+
+def make_downtime_from_open_time_2(
+    open_time: str, schedule_start_time: str, schedule_end_time: str
+):
+    _original_date = DateTime.strptime(open_time, "%m/%d/%Y %I:%M:%S %p")
+    _start_date = DateTime.strptime(schedule_start_time, "%m/%d/%Y %I:%M:%S %p")
+    _end_date = DateTime.strptime(schedule_end_time, "%m/%d/%Y %I:%M:%S %p")
+    _time_diff = int(divmod((_end_date - _start_date).total_seconds(), 60)[0])
     _original_date += timedelta(minutes=_time_diff)
 
     return _original_date.strftime("%m/%d/%Y %I:%M:%S %p")
 
 
 def make_query_string(site_string: str) -> str:
-    """ Generate the query_list string for relationship addition """
+    """Generate the query_list string for relationship addition"""
     sites: List[str] = split_string(site_string)
     query_list: list = []
     invalid_list: list = []
@@ -156,7 +154,7 @@ def make_query_string(site_string: str) -> str:
 
 
 def date_valid(user_date: DateTime, system_date: DateTime = DateTime.today()) -> bool:
-    """ Check if the date is valid as per BMC Regulation """
+    """Check if the date is valid as per BMC Regulation"""
     if user_date <= system_date:
         return True
     else:

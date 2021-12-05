@@ -1,7 +1,12 @@
 from rich import print
 import datetime
 
-from actions.action import CreateNewChangeRequest, CloseChangeRequest, CancelChangeRequests, ParserLDMA
+from actions.action import (
+    CreateNewChangeRequest,
+    CloseChangeRequest,
+    CancelChangeRequests,
+    ParserLDMA,
+)
 from prettify import prettify_ldma
 from prettify.driver_prettify import MenuLayout, get_menu_choice
 from sys import exit
@@ -19,12 +24,13 @@ from here. User's will choose the actions to do on BMC Remedy.
 written by: jiaul_islam
 """
 
+
 def get_advance_date() -> str:
     return (datetime.datetime.today() + datetime.timedelta(days=1)).strftime("%d-%b-%Y")
 
 
 def main():
-    """ The typical main function to start the program """
+    """The typical main function to start the program"""
     try:
         while True:
             print(MenuLayout())
@@ -60,17 +66,17 @@ def main():
                         parse.tearDownDriver()
                     elif choice == 2:
                         site_id = input("\nPlease Enter SiteID: ")
-                        site_ids = site_id.split(',')
+                        site_ids = site_id.split(",")
                         parse = ParserLDMA()
                         parse.parseLDMA(site_ids=site_ids)
                         parse.tearDownDriver()
                     elif choice == 0:
                         break
             elif choice == 5:
-                _date = get_advance_date()
+                _date: str = get_advance_date()
                 db_data: list = export_data(_date)
                 try:
-                    with Writer(f'{_date}_GENARATED_CR.xlsx') as writer:
+                    with Writer(f"{_date}_GENARATED_CR.xlsx") as writer:
                         writer.write_to_excel(db_data)
                         print(f"\nExported data to {writer.file_name}")
                 except Exception as e:

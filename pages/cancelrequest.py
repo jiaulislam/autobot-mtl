@@ -4,7 +4,7 @@ from typing import NoReturn
 from selenium.common.exceptions import (
     ElementClickInterceptedException,
     TimeoutException,
-    NoSuchElementException
+    NoSuchElementException,
 )
 
 from pages.base import BasePage
@@ -12,7 +12,7 @@ from utilites.locators import (
     CancelRequestLocators,
     CloseChangeLocators,
     DateSectionSelector,
-    CommonChangeCreateLocators
+    CommonChangeCreateLocators,
 )
 
 """
@@ -24,19 +24,21 @@ written by: jiaul_islam
 
 
 class CancelRequests(BasePage):
-    """ A class for mimicking the user interactions to cancel a Change Request """
+    """A class for mimicking the user interactions to cancel a Change Request"""
 
     def __init__(self, driver):
         super().__init__(driver=driver)
 
     def is_change_request_opened(self) -> bool:
-        """ Checks if the current working change request is opened or not """
+        """Checks if the current working change request is opened or not"""
         try:
             self.click(DateSectionSelector.DATE_PAGE)
             status = self.is_visible(DateSectionSelector.START_DATE_INPUT)
 
             if status:
-                value = self.find_element(*CloseChangeLocators.ACTUAL_OPEN_DATE).get_attribute("value")
+                value = self.find_element(
+                    *CloseChangeLocators.ACTUAL_OPEN_DATE
+                ).get_attribute("value")
                 if value == "":
                     return False
                 else:
@@ -48,32 +50,34 @@ class CancelRequests(BasePage):
             self.click(DateSectionSelector.DATE_PAGE)
             status = self.is_visible(DateSectionSelector.START_DATE_INPUT)
             if status:
-                value = self.find_element(*CloseChangeLocators.ACTUAL_OPEN_DATE).get_attribute("value")
+                value = self.find_element(
+                    *CloseChangeLocators.ACTUAL_OPEN_DATE
+                ).get_attribute("value")
                 if value == "":
                     return False
                 else:
                     return True
 
     def is_cancelled(self) -> bool:
-        """ Checks if the Cancellation is successful or not """
+        """Checks if the Cancellation is successful or not"""
         status_value = self.get_text(CancelRequestLocators.STATUS_AREA)
-        if status_value == 'Cancelled':
+        if status_value == "Cancelled":
             return True
         else:
             return False
 
     def select_cancel(self) -> NoReturn:
-        """ select the Cancel Option from Status Menu """
+        """select the Cancel Option from Status Menu"""
         self.click(CancelRequestLocators.MENU_FOR_STATUS)
         self.hover_over(CancelRequestLocators.CANCEL_OPTION_SELECT)
         self.click(CancelRequestLocators.CANCEL_OPTION_SELECT)
 
     def save_status(self) -> NoReturn:
-        """ Save the change status to cancelled """
+        """Save the change status to cancelled"""
         self.click(CancelRequestLocators.SAVE)
 
     def get_cancelled_cr_number(self):
-        """ Get the Cancelled Changed Number """
+        """Get the Cancelled Changed Number"""
         change_number = ""
         while change_number == "" or None:
             try:

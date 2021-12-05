@@ -24,7 +24,7 @@ install()
 
 class Create(BasePage):
     def __init__(self, driver: WebDriver):
-        """ Create NCR E2E Actions"""
+        """Create NCR E2E Actions"""
         super().__init__(driver)
 
         self._layout = get_layout()
@@ -46,7 +46,9 @@ class Create(BasePage):
         self.export_data.change_sheet("Main")  # Change Sheet
         EXCEL_ROW = 2  # Need to change if need to change the starting point in Excel
         MAX_CHANGE = self.read_data.get_number_change() + EXCEL_ROW
-        with Live(self._table, refresh_per_second=4, vertical_overflow="visible") as live:
+        with Live(
+            self._table, refresh_per_second=4, vertical_overflow="visible"
+        ) as live:
             for _excel_index in range(EXCEL_ROW, MAX_CHANGE):
 
                 # --------------------- BMCRemedy Create the Change Request as provided data ------------ #
@@ -66,13 +68,17 @@ class Create(BasePage):
 
                     summary = project_name + " // " + service_type + "\n\n"
                     notes = summary + change_activity + "\n\n"
-                    impact_list = "\n\nImpact List:" + make_data.make_impact_list(impact_sites)
+                    impact_list = "\n\nImpact List:" + make_data.make_impact_list(
+                        impact_sites
+                    )
                     details = summary + change_activity + impact_list
 
                     # ---------------make_data: Task Time Calculation ---------------- #
                     cr_start_time = make_data.get_change_start_time(date)
                     start_downtime = make_data.get_service_start_downtime(date)
-                    end_downtime = make_data.get_service_end_downtime(start_downtime, duration)
+                    end_downtime = make_data.get_service_end_downtime(
+                        start_downtime, duration
+                    )
                     activity_hour = make_data.get_change_close_start_time(date)
                     cr_end_time = make_data.get_change_close_end_time(date)
                     # ------------------------------END----------------------------- #
@@ -91,32 +97,43 @@ class Create(BasePage):
                     self.createChangeRequest.insert_work_info(notes)
                     self.createChangeRequest.change_location(location_service)
                     self.createChangeRequest.verify_summary(summary)
-                    self.createChangeRequest.insert_schedule_date_time(cr_start_time, cr_end_time)
+                    self.createChangeRequest.insert_schedule_date_time(
+                        cr_start_time, cr_end_time
+                    )
                     self.createChangeRequest.create_task_template()
 
-                    self.createChangeRequest.fill_initiation_task(cr_start_time, start_downtime)
+                    self.createChangeRequest.fill_initiation_task(
+                        cr_start_time, start_downtime
+                    )
                     self.createChangeRequest.fill_service_downtime_duration_task(
-                        start_downtime, end_downtime)
+                        start_downtime, end_downtime
+                    )
                     self.createChangeRequest.fill_system_downtime_window_task(
-                        cr_start_time, activity_hour)
-                    self.createChangeRequest.fill_system_downtime_duration_task(start_downtime, end_downtime)
+                        cr_start_time, activity_hour
+                    )
+                    self.createChangeRequest.fill_system_downtime_duration_task(
+                        start_downtime, end_downtime
+                    )
                     self.createChangeRequest.fill_review_closure_task(
-                        activity_hour, cr_end_time)
+                        activity_hour, cr_end_time
+                    )
                     # ---------------------------------- END -------------------------------------------- #
 
                     # =================================== ORACLE DB SECTION ==============================#
                     db_data = {
-                        'REQUEST_DATE' : datetime.datetime.strptime(str(date), '%Y-%m-%d %H:%M:%S').strftime('%d-%b-%y'),
-                        'PROJECT_CO_ORDINATOR': coordinator,
-                        'PROJECT_NAME' : project_name,
-                        'ACTIVITY_DETAILS' : change_activity,
-                        'IMPACT_SITE_LIST' : make_data.make_impact_list(impact_sites),
-                        'SERVICE_TYPE' : service_type,
-                        'DOWN_TIME' : duration,
-                        'COMMERCIAL_ZONE' : commercial_zone,
-                        'NCR_NUMBER' : change_number,
-                        'CHANGE_MANAGER' : change_manager,
-                        'STATUS' : 'REQUEST FOR AUTHORIZATION'
+                        "REQUEST_DATE": datetime.datetime.strptime(
+                            str(date), "%Y-%m-%d %H:%M:%S"
+                        ).strftime("%d-%b-%y"),
+                        "PROJECT_CO_ORDINATOR": coordinator,
+                        "PROJECT_NAME": project_name,
+                        "ACTIVITY_DETAILS": change_activity,
+                        "IMPACT_SITE_LIST": make_data.make_impact_list(impact_sites),
+                        "SERVICE_TYPE": service_type,
+                        "DOWN_TIME": duration,
+                        "COMMERCIAL_ZONE": commercial_zone,
+                        "NCR_NUMBER": change_number,
+                        "CHANGE_MANAGER": change_manager,
+                        "STATUS": "REQUEST FOR AUTHORIZATION",
                     }
 
                     insert_data(db_data)
@@ -124,25 +141,39 @@ class Create(BasePage):
                     # ---------------------------Data_Export: Export all the data ------------------ #
                     self.export_data.insert_date(_excel_index, date)
                     self.export_data.insert_project_name(_excel_index, project_name)
-                    self.export_data.insert_project_coordinator(_excel_index, coordinator)
-                    self.export_data.insert_change_activity(_excel_index, change_activity)
+                    self.export_data.insert_project_coordinator(
+                        _excel_index, coordinator
+                    )
+                    self.export_data.insert_change_activity(
+                        _excel_index, change_activity
+                    )
                     self.export_data.insert_impact_site_list(_excel_index, impact_sites)
                     self.export_data.insert_service_type(_excel_index, service_type)
                     self.export_data.insert_downtime_duration(_excel_index, duration)
-                    self.export_data.insert_commercial_zone(_excel_index, commercial_zone)
+                    self.export_data.insert_commercial_zone(
+                        _excel_index, commercial_zone
+                    )
                     self.export_data.insert_change_number(_excel_index, change_number)
                     self.export_data.insert_change_manager(_excel_index, change_manager)
                     self.export_data.save_workbook(StaticData.WRITE_EXCEL_FILE)
                     # ---------------------------- END -------------------------------------------------- #
 
                     console_data = (
-                        str(_excel_index - 1), commercial_zone, service_type, coordinator, change_number, "✅")
+                        str(_excel_index - 1),
+                        commercial_zone,
+                        service_type,
+                        coordinator,
+                        change_number,
+                        "✅",
+                    )
 
                     # Save and go back to home page, need to tag site if service effective cr
-                    if service_type == 'Service Effective':
+                    if service_type == "Service Effective":
                         query_formula = make_data.make_query_string(impact_sites)
                         try:
-                            self.createChangeRequest.add_relationship_to_change(query_formula)
+                            self.createChangeRequest.add_relationship_to_change(
+                                query_formula
+                            )
                         except Exception:
                             while True:
                                 if input() != "x":
@@ -154,7 +185,7 @@ class Create(BasePage):
                     #    if val == 'q':
                     #        break
                     # self.createChangeRequest.save_change()
-                    
+
                     self.createChangeRequest.goto_next_stage()
                     os.chdir(self.path)
                     add_row_table(self._table, *console_data)

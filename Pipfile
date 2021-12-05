@@ -33,6 +33,7 @@ xlsxwriter = "*"
 [dev-packages]
 ipython = "*"
 autopep8 = "*"
+black = "*"
 
 [requires]
 python_version = "3.10"

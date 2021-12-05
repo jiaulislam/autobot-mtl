@@ -14,7 +14,8 @@ def get_logger() -> Logger:
 
     # formatter
     formatter = logging.Formatter(
-        '[%(asctime)s] - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s')
+        "[%(asctime)s] - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s"
+    )
     file_handler.setFormatter(formatter)
 
     logger.addHandler(file_handler)

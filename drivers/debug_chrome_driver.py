@@ -13,4 +13,6 @@ def __remote_handler(port: str) -> Options:
 
 
 def get_browser_window() -> WebDriver:
-    return webdriver.Chrome(ChromeDriverManager().install(), options=__remote_handler(BROWSER))
+    return webdriver.Chrome(
+        ChromeDriverManager().install(), options=__remote_handler(BROWSER)
+    )

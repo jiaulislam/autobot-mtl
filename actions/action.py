@@ -6,7 +6,7 @@ from drivers.chrome import ChromeBrowser
 
 
 class CreateNewChangeRequest(ChromeBrowser, Create):
-    """ A Sub-Class of Handler and CreateChangeRequest module to create new Change Requests """
+    """A Sub-Class of Handler and CreateChangeRequest module to create new Change Requests"""
 
     __createChangeRequest = None
 
@@ -15,14 +15,14 @@ class CreateNewChangeRequest(ChromeBrowser, Create):
         super().setUpDriver()
 
     def createRequest(self):
-        """ Call all the functions from CreateChangeRequest to create change requests """
+        """Call all the functions from CreateChangeRequest to create change requests"""
         self.get_bmc_website()
         self.__createChangeRequest = Create(self.browser)
         self.__createChangeRequest.createNCR()
 
 
 class CloseChangeRequest(ChromeBrowser, Close):
-    """ A Sub-Class of Handler and CloseChangeRequest module to close Change Requests """
+    """A Sub-Class of Handler and CloseChangeRequest module to close Change Requests"""
 
     __closeMyRequest = None
 
@@ -31,14 +31,14 @@ class CloseChangeRequest(ChromeBrowser, Close):
         super().setUpDriver()
 
     def closeRequest(self):
-        """ Call all the functions from CloseChangeRequests to close change requests """
+        """Call all the functions from CloseChangeRequests to close change requests"""
         self.get_bmc_website()
         self.__closeMyRequest = Close(self.browser)
         self.__closeMyRequest.closeRequest()
 
 
 class CancelChangeRequests(ChromeBrowser, Cancel):
-    """ A Sub-Class of Handler and CancelChangeRequest module to Cancel Change Requests """
+    """A Sub-Class of Handler and CancelChangeRequest module to Cancel Change Requests"""
 
     __cancelMyRequest = None
 
@@ -47,7 +47,7 @@ class CancelChangeRequests(ChromeBrowser, Cancel):
         super().setUpDriver()
 
     def cancelRequests(self):
-        """ Call all the functions from CancelChangeRequests to cancel change requests """
+        """Call all the functions from CancelChangeRequests to cancel change requests"""
         self.get_bmc_website()
         self.__cancelMyRequest = Cancel(self.browser)
         self.__cancelMyRequest.cancelRequest()
