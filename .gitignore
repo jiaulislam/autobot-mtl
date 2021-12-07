@@ -16,5 +16,5 @@ logs/
 assets/
 report.html
 .venv/
-data_driver/
+.data_driver/
 .vs/
