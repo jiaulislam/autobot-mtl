@@ -1,10 +1,11 @@
 import datetime
-from typing import List, Tuple
+from typing import List
 import cx_Oracle
+import os
 
-USERNAME = "admin"
-PASSWORD = "admin123"
-DSN = "localhost:1521/cidb"
+USERNAME = os.getenv('DB_USER')
+PASSWORD = os.getenv('DB_PASS')
+DSN = "192.168.1.34:1521/PRAGATI"
 
 connection: cx_Oracle.Connection = cx_Oracle.connect(
     user=USERNAME, password=PASSWORD, dsn=DSN
@@ -14,7 +15,7 @@ connection: cx_Oracle.Connection = cx_Oracle.connect(
 def insert_data(data: dict, connection: cx_Oracle.Connection = connection) -> bool:
     """To Insert data into the Oracle Database"""
     with connection.cursor() as cursor:
-        _query = """INSERT INTO ADMIN.CHANGE_REQ_TBL(
+        _query = """INSERT INTO SHAMIM.CHANGE_REQ_TBL(
             REQUEST_DATE, PROJECT_CO_ORDINATOR, PROJECT_NAME, ACTIVITY_DETAILS, IMPACT_SITE_LIST, SERVICE_TYPE, DOWN_TIME, COMMERCIAL_ZONE, NCR_NUMBER, CHANGE_MANAGER, STATUS)
                     VALUES(:REQUEST_DATE, :PROJECT_CO_ORDINATOR, :PROJECT_NAME, :ACTIVITY_DETAILS, :IMPACT_SITE_LIST, : SERVICE_TYPE, : DOWN_TIME, : COMMERCIAL_ZONE, : NCR_NUMBER, : CHANGE_MANAGER, : STATUS)"""
         try:
@@ -33,7 +34,7 @@ def extract_data(
     """To extract data from the Oracle Database"""
     with connection.cursor() as cursor:
         _query = """
-            SELECT * FROM ADMIN.CHANGE_REQ_TBL WHERE REQUEST_DATE=:REQUEST_DATE
+            SELECT * FROM SHAMIM.CHANGE_REQ_TBL WHERE REQUEST_DATE=:REQUEST_DATE
             """
         try:
             cursor.execute(_query, REQUEST_DATE=date)
@@ -49,7 +50,7 @@ def export_data(
 ) -> List:
     """To export data as a formatted xlsx output file"""
     with connection.cursor() as cursor:
-        _query = """ SELECT * FROM ADMIN.CHANGE_REQ_TBL WHERE REQUEST_DATE=:REQ_DATE AND STATUS=:cr_status ORDER BY SLNO ASC """
+        _query = """ SELECT * FROM SHAMIM.CHANGE_REQ_TBL WHERE REQUEST_DATE=:REQ_DATE AND STATUS=:cr_status ORDER BY SLNO ASC """
 
         try:
             cursor.execute(_query, REQ_DATE=date, cr_status=cr_status)
@@ -62,7 +63,7 @@ def update_data(data: dict, connection: cx_Oracle.Connection = connection):
     """To update data in the Oracle Database"""
     # ! need to complete below code for update
     with connection.cursor() as cursor:
-        _query = """UPDATE ADMIN.CHANGE_REQ_TBL SET STATUS = :STATUS WHERE REQUEST_ID = :REQUEST_ID"""
+        _query = """UPDATE SHAMIM.CHANGE_REQ_TBL SET STATUS = :STATUS WHERE REQUEST_ID = :REQUEST_ID"""
         try:
             cursor.execute(_query, data)
             connection.commit()
