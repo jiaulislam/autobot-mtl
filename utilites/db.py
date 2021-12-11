@@ -3,9 +3,9 @@ from typing import List
 import cx_Oracle
 import os
 
-USERNAME = os.getenv('DB_USER')
-PASSWORD = os.getenv('DB_PASS')
-DSN = "192.168.1.34:1521/PRAGATI"
+USERNAME = 'admin'
+PASSWORD = 'admin@123'
+DSN = "localhost:1521/cidb"
 
 connection: cx_Oracle.Connection = cx_Oracle.connect(
     user=USERNAME, password=PASSWORD, dsn=DSN
