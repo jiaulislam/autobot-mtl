@@ -18,3 +18,4 @@ report.html
 .venv/
 .data_driver/
 .vs/
+config.ini

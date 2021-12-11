@@ -58,15 +58,15 @@ def export_data(
             raise e
 
 
-def update_data(data: dict, connection: cx_Oracle.Connection = connection):
-    """To update data in the Oracle Database"""
-    # ! need to complete below code for update
-    with connection.cursor() as cursor:
-        _query = """UPDATE ADMIN.CHANGE_REQ_TBL SET STATUS = :STATUS WHERE REQUEST_ID = :REQUEST_ID"""
-        try:
-            cursor.execute(_query, data)
-            connection.commit()
-            return True
-        except cx_Oracle.DatabaseError as e:
-            print(e)
-            return False
+# def update_data(data: dict, connection: cx_Oracle.Connection = connection):
+#     """To update data in the Oracle Database"""
+#     # ! need to complete below code for update
+#     with connection.cursor() as cursor:
+#         _query = """UPDATE ADMIN.CHANGE_REQ_TBL SET STATUS = :STATUS WHERE REQUEST_ID = :REQUEST_ID"""
+#         try:
+#             cursor.execute(_query, data)
+#             connection.commit()
+#             return True
+#         except cx_Oracle.DatabaseError as e:
+#             print(e)
+#             return False
