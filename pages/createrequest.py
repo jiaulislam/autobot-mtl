@@ -6,7 +6,10 @@ from selenium.common.exceptions import (
 )
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 
+from selenium.webdriver.common.by import By
 from pages.base import BasePage
 from utilites.locators import (
     CommonChangeCreateLocators,
@@ -218,12 +221,18 @@ class CreateRequests(BasePage):
         self.__set_date_time_in_task(task_page, start_downtime, end_downtime)
 
     def fill_system_downtime_window_task(
-        self, work_window_begin: str, work_window_end: str
+        self, work_window_begin: str, work_window_end: str, service_type: str, query_string: str
     ) -> None:
         """Fill up the date time in System Downtime Window Phase Task"""
-        task_page = self._driver.current_window_handle
+        parent_window = self._driver.current_window_handle
         self.double_click(TaskSectionLocators.SERVICE_DOWNTIME_WINDOW_TASK_SPAN)
-        self.__set_date_time_in_task(task_page, work_window_begin, work_window_end)
+        if service_type == "Service Effective":
+                self.add_relationship_to_change(
+                    query_string, parent_window
+                )
+                self.double_click(TaskSectionLocators.SERVICE_DOWNTIME_WINDOW_TASK_SPAN)
+
+        self.__set_date_time_in_task(parent_window, work_window_begin, work_window_end)
 
     def fill_system_downtime_duration_task(
         self, start_downtime: str, end_downtime: str
@@ -289,60 +298,102 @@ class CreateRequests(BasePage):
             self._driver.find_element(*SummaryAndNotesBox.SUMMARY_TEXTBOX).clear()
             self.insert_text_summary(summary)
 
-    def add_relationship_to_change(self, relationship_query_formula: str) -> None:
+    def add_relationship_to_change(self, relationship_query_formula: str, parent_window) -> None:
         """Add the relationship to the Change request if the Change is a Service Effective Change"""
-        self.click(RelationshipQueryLocators.RELATIONSHIP_TAB_BTN)
-        parent_window = self._driver.current_window_handle
-        self.click(RelationshipQueryLocators.RECORD_TYPE_TEXTAREA)
-        self.hover_over(RelationshipQueryLocators.CONFIGURATION_ITEM_LIST)
-        self.click(RelationshipQueryLocators.CONFIGURATION_ITEM_LIST)
-        self.click(RelationshipQueryLocators.SEARCH_BTN)
+        # self.click(RelationshipQueryLocators.RELATIONSHIP_TAB_BTN)
+        # parent_window = self._driver.current_window_handle
+        # self.click(RelationshipQueryLocators.RECORD_TYPE_TEXTAREA)
+        # self.hover_over(RelationshipQueryLocators.CONFIGURATION_ITEM_LIST)
+        # self.click(RelationshipQueryLocators.CONFIGURATION_ITEM_LIST)
+        # self.click(RelationshipQueryLocators.SEARCH_BTN)
 
-        for first_window in self._driver.window_handles:
-            if first_window != parent_window:
-                self._driver.switch_to.window(first_window)
-                self.click(RelationshipQueryLocators.RELATIONSHIP_ADVANCE_SEARCH_LINK)
-                self.write(
-                    RelationshipQueryLocators.RELATIONSHIP_QUERY_TEXTBOX,
-                    relationship_query_formula,
-                )
-                self.click(RelationshipQueryLocators.RELATIONSHIP_ADVANCE_SEARCH_BTN)
 
-                while True:
-                    try:
-                        self.select_all(
-                            RelationshipQueryLocators.RELATIONSHIP_ROBI_AXIATA
+        # parent_window = self._driver.current_window_handle
+        # self.double_click(TaskSectionLocators.SERVICE_DOWNTIME_WINDOW_TASK_SPAN)
+
+        # w1 = self._driver.current_window_handle     
+        w2 = ""
+        for child_window in self._driver.window_handles:
+            if child_window != parent_window:
+                self._driver.switch_to.window(child_window)
+                w2 = child_window
+                self.click(RelationshipQueryLocators.RELATIONSHIP_TAB_BTN)
+                time.sleep(2)
+                a1 = ActionChains(self._driver)
+                a1.send_keys(Keys.TAB * 5)
+                a1.send_keys(Keys.SPACE)
+                a1.perform()
+                time.sleep(2)
+                a2 = ActionChains(self._driver)
+                a2.send_keys(Keys.ARROW_DOWN)
+                time.sleep(1)
+                a2.send_keys(Keys.ENTER)
+                a2.perform()
+                time.sleep(1)
+                a3 = ActionChains(self._driver)
+                a3.send_keys(Keys.TAB)
+                a3.send_keys(Keys.SPACE)
+                time.sleep(1)
+                a3.perform()
+
+                for w3 in self._driver.window_handles:
+                    if w3 != parent_window and w3 != w2:
+                        self._driver.switch_to.window(w3)
+                        self.click(RelationshipQueryLocators.RELATIONSHIP_ADVANCE_SEARCH_LINK)
+                        self.write(
+                            RelationshipQueryLocators.RELATIONSHIP_QUERY_TEXTBOX,
+                            relationship_query_formula,
                         )
-                        break
-                    except NoSuchElementException:
-                        pass
-                    except NoSuchFrameException:
-                        pass
-                    except NoSuchWindowException:
-                        pass
-                while True:
-                    try:
-                        self.click(
-                            RelationshipQueryLocators.RELATE_THE_RELATIONSHIP_BTN
-                        )
-                        break
-                    except ElementClickInterceptedException:
-                        pass
-                    except NoSuchWindowException:
-                        break
-                while True:
-                    try:
-                        # After relationship add a frame is to be expected. handle the frame
-                        self.handle_frame_alert(
-                            FrameBoxLocators.FRAME_OF_CONFIRMATION,
-                            FrameBoxLocators.FRAME_OK_BUTTON,
-                        )
-                        # break the parent to this block loop
-                        break
-                    except NoSuchFrameException:
-                        pass
-                    except NoSuchWindowException:
-                        break
+                        self.click(RelationshipQueryLocators.RELATIONSHIP_ADVANCE_SEARCH_BTN)
+
+                        while True:
+                            try:
+                                self.select_all(
+                                    RelationshipQueryLocators.RELATIONSHIP_ROBI_AXIATA
+                                )
+                                break
+                            except NoSuchElementException:
+                                pass
+                            except NoSuchFrameException:
+                                pass
+                            except NoSuchWindowException:
+                                pass
+                        while True:
+                            try:
+                                self.click(
+                                    RelationshipQueryLocators.RELATE_THE_RELATIONSHIP_BTN
+                                )
+                                break
+                            except ElementClickInterceptedException:
+                                pass
+                            except NoSuchWindowException:
+                                break
+                        while True:
+                            try:
+                                # After relationship add a frame is to be expected. handle the frame
+                                if (len(self._driver.find_elements(By.XPATH, "//iframe"))):
+                                    iframe = self._driver.find_elements(By.XPATH, "//iframe")[0]
+                                    time.sleep(1.5) 
+                                    self._driver.switch_to.frame(iframe) # Save do
+                                    time.sleep(1.5)
+                                    self.click(FrameBoxLocators.FRAME_OK_BUTTON)
+                                    self._driver.switch_to.default_content()
+
+                                for confirmWindow in self._driver.window_handles:
+                                    if confirmWindow != parent_window and confirmWindow != w2 and confirmWindow != w3:
+                                        self._driver.switch_to.window(confirmWindow)
+                                        # print(f'{self._driver.title} window closed!')
+                                        self._driver.close()
+                                        break
+                            except NoSuchFrameException:
+                                pass
+                            except NoSuchWindowException:
+                                break
+            
+                self._driver.switch_to.window(w3)
+                self._driver.find_element(By.XPATH, "//*[@id='WIN_0_301644000']/div/div").click()
+                self._driver.switch_to.window(w2)
+                self._driver.find_element(By.XPATH, "//div[@class='f7'][contains(text(), 'Save')]").click()
         self._driver.switch_to.window(parent_window)
 
     def is_home_page(self, validating_text: str = "IT HOME"):

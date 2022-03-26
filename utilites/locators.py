@@ -291,6 +291,10 @@ class CancelRequestLocators:
     )
     STATUS_AREA = (By.XPATH, "//textarea[@id='arid_WIN_3_303502600']")
 
+    ARROW_FOR_SFA = (By.XPATH, "//*[@id='WIN_3_301542100']/a")
+
+    YES_BTN = (By.XPATH, "//div[@class='f1' and contains(text(), 'Yes')]")
+
 
 class RelationshipQueryLocators:
     """A class for all the variable to relate the relationship query"""
@@ -304,6 +308,10 @@ class RelationshipQueryLocators:
         By.XPATH,
         "//tr[@class='MenuTableRow']//td[contains(text(), 'Configuration Item')]",
     )
+
+    TASK_RELATIONSHIP_TAB_BTN = (By.XPATH, "//a[contains(text(), 'Relationships')]"),
+    ARROW_KEY_FOR_CONFIG = (By.XPATH, "//*[@id='arid_WIN_0_301541300']"),
+    ARROW_KEY_RIGHT_SEARCH = (By.XPATH, "//*[@id='WIN_0_10003600']"),
 
     SEARCH_BTN = (By.XPATH, "//img[@id='reg_img_301905800']")
     # ==> RELATIONSHIP PAGE LOCATORS <== #

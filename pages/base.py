@@ -140,7 +140,7 @@ class BasePage(object):
         self.click(xpath_locator)
 
     def wait_for_loading_icon_disappear(
-        self, *locator: Tuple[By, str], _time: float = 1, _range: int = 600
+        self, *locator: Tuple[By, str], _time: float = 0.88, _range: int = 600
     ) -> None:
         """Wait for loading_icon to vanish"""
         _counter = 1

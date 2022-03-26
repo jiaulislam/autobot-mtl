@@ -10,7 +10,7 @@ from actions.action import (
 from prettify import prettify_ldma
 from prettify.driver_prettify import MenuLayout, get_menu_choice
 from sys import exit
-from utilites.db import export_data
+# from utilites.db import export_data
 
 from xlsx_writer.writer import Writer
 

@@ -1,5 +1,5 @@
 import time
-from typing import NoReturn
+from typing import NoReturn, Tuple
 
 from selenium.common.exceptions import (
     ElementClickInterceptedException,
@@ -14,6 +14,9 @@ from utilites.locators import (
     DateSectionSelector,
     CommonChangeCreateLocators,
 )
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 
 """
 A class for Cancel the unused Change Requests. For cancelling a 
@@ -84,3 +87,37 @@ class CancelRequests(BasePage):
                 return self.get_text(CommonChangeCreateLocators.CHANGE_NUMBER_VALUE)
             except NoSuchElementException:
                 raise Exception("Timed out.....")
+
+    def _wait_for_loading_icon_disappear(
+        self, locator: Tuple[By, str], _time: float = 1, _range: int = 600
+    ) -> None:
+        """Wait for loading_icon to vanish"""
+        _counter = 1
+        while _counter <= _range:
+            _loading_icons: list = self.find_elements(*locator)
+            if not len(_loading_icons):
+                break
+            time.sleep(_time)
+            _counter += 1
+
+    def cancel_sfa_cr(self) -> NoReturn:
+        """Cancels the SFA Change Request"""
+        # driver.find_element(By.XPATH, "//*[@id='WIN_3_301542100']/a").click()
+        base_window = self._driver.current_window_handle
+        self.click(CancelRequestLocators.ARROW_FOR_SFA)
+        actions = ActionChains(self._driver)
+        actions.send_keys(Keys.ARROW_DOWN)
+        actions.perform()
+        time.sleep(0.8)
+        actions = ActionChains(self._driver)
+        actions.send_keys(Keys.ENTER)
+        actions.perform()
+
+        for w1 in self._driver.window_handles:
+            if w1 != base_window:
+                self._driver.switch_to.window(w1)
+                self.click(CancelRequestLocators.YES_BTN)
+                time.sleep(1)
+                break
+        self._driver.switch_to.window(base_window)
+        self._wait_for_loading_icon_disappear(CommonChangeCreateLocators.LOADING_ICON)

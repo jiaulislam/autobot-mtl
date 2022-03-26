@@ -276,6 +276,7 @@ class CloseRequests(BasePage):
 
     def is_status_scheduled_for_approval(self):
         """Check if the current status for CR is Scheduled for approval"""
+        time.sleep(0.88)
         status = self.get_text(Close_Locators.CURRENT_CR_STATUS)
         if status == "Scheduled For Approval":
             return True

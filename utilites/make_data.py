@@ -26,7 +26,7 @@ def get_service_start_downtime(m_date: str) -> str:
     make_date_time = parse_datetime(m_date)
     if date_valid(make_date_time):
         make_date_time += timedelta(days=1)
-    start_downtime = make_date_time.replace(hour=11, minute=0, second=0)
+    start_downtime = make_date_time.replace(hour=9, minute=30, second=0)
     return start_downtime.strftime("%m/%d/%Y %I:%M:%S %p")
 
 
@@ -58,7 +58,7 @@ def get_change_close_start_time(m_date: str) -> str:
     if date_valid(make_date_time):
         make_date_time += timedelta(days=1)
         # 20, 17
-    close_start_time = make_date_time.replace(hour=17, minute=0, second=0)
+    close_start_time = make_date_time.replace(hour=15, minute=30, second=0)
     return close_start_time.strftime("%m/%d/%Y %I:%M:%S %p")
 
 
@@ -70,7 +70,7 @@ def get_change_close_end_time(m_date: str) -> str:
     if date_valid(make_date_time):
         make_date_time += timedelta(days=1)
         # 21, 18
-    close_start_time = make_date_time.replace(hour=18, minute=0, second=0)
+    close_start_time = make_date_time.replace(hour=16, minute=0, second=0)
     return close_start_time.strftime("%m/%d/%Y %I:%M:%S %p")
 
 

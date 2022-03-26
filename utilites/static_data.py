@@ -34,7 +34,7 @@ class BMCData:
     USERNAME = "mas1171"  # Get the username
     PASSWORD = "Robi@123"  # Get the password
     # USERNAME = 'jis2462'  # Get the username
-    # PASSWORD = 'Robi@123'  # Get the password
+    # PASSWORD = 'Utsp@123456'  # Get the password
 
 
 class LDMAData:

@@ -14,7 +14,7 @@ from pages.login import LoginPage
 from prettify.create_prettifier import get_layout, get_table, add_row_table
 from utilites import make_data
 from utilites.data_export import Data_Export
-from utilites.db import insert_data
+# from utilites.db import insert_data
 from utilites.read_excel_data import Read_Data
 from utilites.static_data import StaticData
 
@@ -82,7 +82,7 @@ class Create(BasePage):
                     activity_hour = make_data.get_change_close_start_time(date)
                     cr_end_time = make_data.get_change_close_end_time(date)
                     # ------------------------------END----------------------------- #
-
+                    query_string = make_data.make_query_string(impact_sites)
                     self.homePage.click_application_btn()
                     self.homePage.click_new_change()
                     # TODO: THIS THING IS BUGGING ME > NEED A WAY TO HANDLE > DON'T WANT TO USE IMPLICIT WAIT
@@ -109,7 +109,7 @@ class Create(BasePage):
                         start_downtime, end_downtime
                     )
                     self.createChangeRequest.fill_system_downtime_window_task(
-                        cr_start_time, activity_hour
+                        cr_start_time, activity_hour, service_type, query_string
                     )
                     self.createChangeRequest.fill_system_downtime_duration_task(
                         start_downtime, end_downtime
@@ -120,23 +120,23 @@ class Create(BasePage):
                     # ---------------------------------- END -------------------------------------------- #
 
                     # =================================== ORACLE DB SECTION ==============================#
-                    db_data = {
-                        "REQUEST_DATE": datetime.datetime.strptime(
-                            str(date), "%Y-%m-%d %H:%M:%S"
-                        ).strftime("%d-%b-%y"),
-                        "PROJECT_CO_ORDINATOR": coordinator,
-                        "PROJECT_NAME": project_name,
-                        "ACTIVITY_DETAILS": change_activity,
-                        "IMPACT_SITE_LIST": make_data.make_impact_list(impact_sites),
-                        "SERVICE_TYPE": service_type,
-                        "DOWN_TIME": duration,
-                        "COMMERCIAL_ZONE": commercial_zone,
-                        "NCR_NUMBER": change_number,
-                        "CHANGE_MANAGER": change_manager,
-                        "STATUS": "REQUEST FOR AUTHORIZATION",
-                    }
+                    # db_data = {
+                    #     "REQUEST_DATE": datetime.datetime.strptime(
+                    #         str(date), "%Y-%m-%d %H:%M:%S"
+                    #     ).strftime("%d-%b-%y"),
+                    #     "PROJECT_CO_ORDINATOR": coordinator,
+                    #     "PROJECT_NAME": project_name,
+                    #     "ACTIVITY_DETAILS": change_activity,
+                    #     "IMPACT_SITE_LIST": make_data.make_impact_list(impact_sites),
+                    #     "SERVICE_TYPE": service_type,
+                    #     "DOWN_TIME": duration,
+                    #     "COMMERCIAL_ZONE": commercial_zone,
+                    #     "NCR_NUMBER": change_number,
+                    #     "CHANGE_MANAGER": change_manager,
+                    #     "STATUS": "REQUEST FOR AUTHORIZATION",
+                    # }
 
-                    insert_data(db_data)
+                    # insert_data(db_data)
 
                     # ---------------------------Data_Export: Export all the data ------------------ #
                     self.export_data.insert_date(_excel_index, date)
@@ -167,26 +167,13 @@ class Create(BasePage):
                         "✅",
                     )
 
-                    # Save and go back to home page, need to tag site if service effective cr
-                    if service_type == "Service Effective":
-                        query_formula = make_data.make_query_string(impact_sites)
-                        try:
-                            self.createChangeRequest.add_relationship_to_change(
-                                query_formula
-                            )
-                        except Exception:
-                            while True:
-                                if input() != "x":
-                                    time.sleep(1)
-                                break
-
                     # while True:
                     #    val = input("Press q after finished")
                     #    if val == 'q':
                     #        break
-                    self.createChangeRequest.save_change()
+                    # self.createChangeRequest.save_change()
 
-                    # self.createChangeRequest.goto_next_stage()
+                    self.createChangeRequest.goto_next_stage()
                     os.chdir(self.path)
                     add_row_table(self._table, *console_data)
                     live.update(self._table)

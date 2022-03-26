@@ -72,7 +72,7 @@ class Cancel(BasePage):
                                             self.cancel_requests.wait_for_loading_icon_disappear()
                                             self.cancel_requests.select_cancel()
                                             self.cancel_requests.save_status()
-                                            # // Cancelled //
+                                            # Cancelled 
                                             CancelPrettify.add_row_table(
                                                 str(_task_no + 1),
                                                 self.cancel_requests.get_cancelled_cr_number(),
@@ -81,7 +81,7 @@ class Cancel(BasePage):
                                             live.update(CancelPrettify.show_layout())
                                             self.create_requests.go_back_to_homepage()
                                         else:
-                                            #  // Already Closed //
+                                            #  Already Closed 
                                             CancelPrettify.add_row_table(
                                                 str(_task_no + 1),
                                                 self.cancel_requests.get_cancelled_cr_number(),
@@ -91,7 +91,7 @@ class Cancel(BasePage):
                                             live.update(CancelPrettify.show_layout())
                                             self.create_requests.go_back_to_homepage()
                                     else:
-                                        # // Already Opened //
+                                        #  Already Opened 
                                         CancelPrettify.add_row_table(
                                             str(_task_no + 1),
                                             self.cancel_requests.get_cancelled_cr_number(),
@@ -101,16 +101,17 @@ class Cancel(BasePage):
                                         live.update(CancelPrettify.show_layout())
                                         self.create_requests.go_back_to_homepage()
                                 else:
-                                    # // Scheduled for Approval
+                                    #  Scheduled for Approval
+                                    self.cancel_requests.cancel_sfa_cr()
                                     CancelPrettify.add_row_table(
                                         str(_task_no + 1),
                                         self.cancel_requests.get_cancelled_cr_number(),
-                                        "S/F/A",
+                                        "Cancelled SFA",
                                     )
                                     live.update(CancelPrettify.show_layout())
                                     self.create_requests.go_back_to_homepage()
                             else:
-                                # // Already Closed or Completed
+                                #  Already Closed or Completed
                                 CancelPrettify.add_row_table(
                                     str(_task_no + 1),
                                     self.cancel_requests.get_cancelled_cr_number(),
