@@ -71,9 +71,12 @@ class Read_Data:
         """get the change activity from excel file"""
         activity = self._sheet["E" + str(index)]
         value = repr(activity.value)
-        value = value.replace('\\n', "\n")
+        value = value.strip('"')
+        value = value.strip("'")
+        value = value.strip()
+        value = value.replace("\\n", "\n")
         value = value.replace("\\t", " ")
-        return value
+        return str(value)
 
     def parse_impact_list(self, index: int) -> str:
         """get the impact list from excel file"""

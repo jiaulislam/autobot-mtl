@@ -221,17 +221,27 @@ class CreateRequests(BasePage):
         self.__set_date_time_in_task(task_page, start_downtime, end_downtime)
 
     def fill_system_downtime_window_task(
-        self, work_window_begin: str, work_window_end: str, service_type: str, query_string: str
+        self,
+        work_window_begin: str,
+        work_window_end: str,
+        service_type: str,
+        query_string: str,
     ) -> None:
         """Fill up the date time in System Downtime Window Phase Task"""
         parent_window = self._driver.current_window_handle
         self.double_click(TaskSectionLocators.SERVICE_DOWNTIME_WINDOW_TASK_SPAN)
-        if service_type == "Service Effective":
-                self.add_relationship_to_change(
-                    query_string, parent_window
-                )
+        try:
+            if service_type == "Service Effective":
+                self.add_relationship_to_change(query_string, parent_window)
                 self.double_click(TaskSectionLocators.SERVICE_DOWNTIME_WINDOW_TASK_SPAN)
-
+        except Exception as e:
+            print(e)
+            while True:
+                var: str = input(
+                    "Exception Found in Relationship Please Q to Receover: "
+                )
+                if var == "q":
+                    break
         self.__set_date_time_in_task(parent_window, work_window_begin, work_window_end)
 
     def fill_system_downtime_duration_task(
@@ -298,7 +308,9 @@ class CreateRequests(BasePage):
             self._driver.find_element(*SummaryAndNotesBox.SUMMARY_TEXTBOX).clear()
             self.insert_text_summary(summary)
 
-    def add_relationship_to_change(self, relationship_query_formula: str, parent_window) -> None:
+    def add_relationship_to_change(
+        self, relationship_query_formula: str, parent_window
+    ) -> None:
         """Add the relationship to the Change request if the Change is a Service Effective Change"""
         # self.click(RelationshipQueryLocators.RELATIONSHIP_TAB_BTN)
         # parent_window = self._driver.current_window_handle
@@ -307,15 +319,15 @@ class CreateRequests(BasePage):
         # self.click(RelationshipQueryLocators.CONFIGURATION_ITEM_LIST)
         # self.click(RelationshipQueryLocators.SEARCH_BTN)
 
-
         # parent_window = self._driver.current_window_handle
         # self.double_click(TaskSectionLocators.SERVICE_DOWNTIME_WINDOW_TASK_SPAN)
 
-        # w1 = self._driver.current_window_handle     
+        # w1 = self._driver.current_window_handle
         w2 = ""
         for child_window in self._driver.window_handles:
             if child_window != parent_window:
                 self._driver.switch_to.window(child_window)
+                time.sleep(2)
                 w2 = child_window
                 self.click(RelationshipQueryLocators.RELATIONSHIP_TAB_BTN)
                 time.sleep(2)
@@ -339,12 +351,16 @@ class CreateRequests(BasePage):
                 for w3 in self._driver.window_handles:
                     if w3 != parent_window and w3 != w2:
                         self._driver.switch_to.window(w3)
-                        self.click(RelationshipQueryLocators.RELATIONSHIP_ADVANCE_SEARCH_LINK)
+                        self.click(
+                            RelationshipQueryLocators.RELATIONSHIP_ADVANCE_SEARCH_LINK
+                        )
                         self.write(
                             RelationshipQueryLocators.RELATIONSHIP_QUERY_TEXTBOX,
                             relationship_query_formula,
                         )
-                        self.click(RelationshipQueryLocators.RELATIONSHIP_ADVANCE_SEARCH_BTN)
+                        self.click(
+                            RelationshipQueryLocators.RELATIONSHIP_ADVANCE_SEARCH_BTN
+                        )
 
                         while True:
                             try:
@@ -371,16 +387,24 @@ class CreateRequests(BasePage):
                         while True:
                             try:
                                 # After relationship add a frame is to be expected. handle the frame
-                                if (len(self._driver.find_elements(By.XPATH, "//iframe"))):
-                                    iframe = self._driver.find_elements(By.XPATH, "//iframe")[0]
-                                    time.sleep(1.5) 
-                                    self._driver.switch_to.frame(iframe) # Save do
+                                if len(
+                                    self._driver.find_elements(By.XPATH, "//iframe")
+                                ):
+                                    iframe = self._driver.find_elements(
+                                        By.XPATH, "//iframe"
+                                    )[0]
+                                    time.sleep(1.5)
+                                    self._driver.switch_to.frame(iframe)  # Save do
                                     time.sleep(1.5)
                                     self.click(FrameBoxLocators.FRAME_OK_BUTTON)
                                     self._driver.switch_to.default_content()
 
                                 for confirmWindow in self._driver.window_handles:
-                                    if confirmWindow != parent_window and confirmWindow != w2 and confirmWindow != w3:
+                                    if (
+                                        confirmWindow != parent_window
+                                        and confirmWindow != w2
+                                        and confirmWindow != w3
+                                    ):
                                         self._driver.switch_to.window(confirmWindow)
                                         # print(f'{self._driver.title} window closed!')
                                         self._driver.close()
@@ -389,11 +413,15 @@ class CreateRequests(BasePage):
                                 pass
                             except NoSuchWindowException:
                                 break
-            
+
                 self._driver.switch_to.window(w3)
-                self._driver.find_element(By.XPATH, "//*[@id='WIN_0_301644000']/div/div").click()
+                self._driver.find_element(
+                    By.XPATH, "//*[@id='WIN_0_301644000']/div/div"
+                ).click()
                 self._driver.switch_to.window(w2)
-                self._driver.find_element(By.XPATH, "//div[@class='f7'][contains(text(), 'Save')]").click()
+                self._driver.find_element(
+                    By.XPATH, "//div[@class='f7'][contains(text(), 'Save')]"
+                ).click()
         self._driver.switch_to.window(parent_window)
 
     def is_home_page(self, validating_text: str = "IT HOME"):

@@ -31,10 +31,10 @@ class StaticData:
 
 class BMCData:
     BMC_URL = "http://itsm-web.robi.com.bd:8080/arsys/shared/login.jsp?/arsys/home"
-    USERNAME = "mas1171"  # Get the username
-    PASSWORD = "Robi@123"  # Get the password
-    # USERNAME = 'jis2462'  # Get the username
-    # PASSWORD = 'Utsp@123456'  # Get the password
+    # USERNAME = "mas1171"  # Get the username
+    # PASSWORD = "Robi@123"  # Get the password
+    USERNAME = "jis2462"  # Get the username
+    PASSWORD = "Utsp@123456"  # Get the password
 
 
 class LDMAData:

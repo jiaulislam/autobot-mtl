@@ -1,5 +1,6 @@
 from rich.live import Live
 from selenium.webdriver.chrome.webdriver import WebDriver
+from sqlalchemy import false
 
 from pages.base import BasePage
 from pages.closerequest import CloseRequests
@@ -75,9 +76,17 @@ class Close(BasePage):
                                             actual_open_time
                                         )
                                         # Close the 3rd task
-                                        self.close_requests.close_service_downtime_window_task(
-                                            actual_open_time, current_sys_time
-                                        )
+                                        try:
+                                            self.close_requests.close_service_downtime_window_task(
+                                                actual_open_time, current_sys_time
+                                            )
+                                        except Exception as e:
+                                            print(e)
+                                            x = True
+                                            while x:
+                                                x = input("Exeption Found!")
+                                                if not x:
+                                                    break
                                         # Close the 4th task
                                         try:
                                             self.close_requests.close_system_downtime_duration_task(

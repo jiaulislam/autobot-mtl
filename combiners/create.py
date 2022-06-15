@@ -14,9 +14,11 @@ from pages.login import LoginPage
 from prettify.create_prettifier import get_layout, get_table, add_row_table
 from utilites import make_data
 from utilites.data_export import Data_Export
-# from utilites.db import insert_data
 from utilites.read_excel_data import Read_Data
 from utilites.static_data import StaticData
+
+from database import LocalSession
+from models.change_model import ChangeRequest
 
 # install traceback
 install()
@@ -120,23 +122,25 @@ class Create(BasePage):
                     # ---------------------------------- END -------------------------------------------- #
 
                     # =================================== ORACLE DB SECTION ==============================#
-                    # db_data = {
-                    #     "REQUEST_DATE": datetime.datetime.strptime(
-                    #         str(date), "%Y-%m-%d %H:%M:%S"
-                    #     ).strftime("%d-%b-%y"),
-                    #     "PROJECT_CO_ORDINATOR": coordinator,
-                    #     "PROJECT_NAME": project_name,
-                    #     "ACTIVITY_DETAILS": change_activity,
-                    #     "IMPACT_SITE_LIST": make_data.make_impact_list(impact_sites),
-                    #     "SERVICE_TYPE": service_type,
-                    #     "DOWN_TIME": duration,
-                    #     "COMMERCIAL_ZONE": commercial_zone,
-                    #     "NCR_NUMBER": change_number,
-                    #     "CHANGE_MANAGER": change_manager,
-                    #     "STATUS": "REQUEST FOR AUTHORIZATION",
-                    # }
+                    data = ChangeRequest(
+                        cr_date=datetime.datetime.strptime(
+                            str(date), "%Y-%m-%d %H:%M:%S"
+                        ).strftime("%d-%b-%y"),
+                        coordinator_name=coordinator,
+                        project_name=project_name,
+                        activity_details=str(change_activity),
+                        impact_list=make_data.make_impact_list(impact_sites),
+                        service_type=service_type,
+                        downtime_type=duration,
+                        zone=commercial_zone,
+                        cr_no=change_number,
+                        robi_pm=change_manager,
+                        status="REQUEST FOR AUTHORIZATION",
+                        lsp_name="UTSP",
+                    )
 
-                    # insert_data(db_data)
+                    with LocalSession.begin() as session:
+                        session.add(data)
 
                     # ---------------------------Data_Export: Export all the data ------------------ #
                     self.export_data.insert_date(_excel_index, date)
@@ -168,9 +172,9 @@ class Create(BasePage):
                     )
 
                     # while True:
-                    #    val = input("Press q after finished")
-                    #    if val == 'q':
-                    #        break
+                    #     val = input("Press q after finished")
+                    #     if val == "q":
+                    #         break
                     # self.createChangeRequest.save_change()
 
                     self.createChangeRequest.goto_next_stage()
